@@ -110,6 +110,6 @@ if __name__ == "__main__":
         cursor.close()
         logging.info(f"time after writing info to sql server :{datetime.datetime.now()}")
     except Exception as error:
-        print("An error occurred:", type(error).__name__)
+        print("An error occurred:", error)
         logging.exception("message")
         
