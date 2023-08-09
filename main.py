@@ -47,7 +47,7 @@ if __name__ == "__main__":
     database = '3CDB' 
     username = '3CBI' 
     password = '9SymBGNV7Hc12t7feSY8'  
-    params = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+    params = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server + ',1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
     
     db_params = urllib.parse.quote_plus(params)
     engine = sqlalchemy.create_engine("mssql+pyodbc:///?odbc_connect={}".format(db_params))
