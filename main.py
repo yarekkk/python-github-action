@@ -109,6 +109,6 @@ if __name__ == "__main__":
         cnxn.commit()
         cursor.close()
         logging.info(f"time after writing info to sql server :{datetime.datetime.now()}")
-    except e:
+    except e as error:
         logging.exception("message")
         print(e)
