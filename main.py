@@ -50,7 +50,7 @@ if __name__ == "__main__":
     params = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server + ',1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
     
     db_params = urllib.parse.quote_plus(params)
-    engine = sqlalchemy.create_engine("mssql+pyodbc:///?odbc_connect={}".format(db_params))
+    engine = sqlalchemy.create_engine("mssql+pyodbc:///?odbc_connect={}".format(db_params), pool_size=10, max_overflow=20)
     @event.listens_for(engine, "before_cursor_execute")
     def receive_before_cursor_execute(
         conn, cursor, statement, params, context, executemany
