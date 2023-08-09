@@ -47,8 +47,16 @@ if __name__ == "__main__":
     database = '3CDB' 
     username = '3CBI' 
     password = '9SymBGNV7Hc12t7feSY8'  
-    cnxn = pyodbc.connect('DRIVER={SQL Server};SERVER='+server+';DATABASE='+database+';UID='+username+';PWD='+ password)
-    cursor = cnxn.cursor()
+    params = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER='+server + ';PORT=1433;DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+    
+    db_params = urllib.parse.quote_plus(params)
+    engine = sqlalchemy.create_engine("mssql+pyodbc:///?odbc_connect={}".format(db_params))
+    @event.listens_for(engine, "before_cursor_execute")
+    def receive_before_cursor_execute(
+        conn, cursor, statement, params, context, executemany
+            ):
+                if executemany:
+                    cursor.fast_executemany = True
     # raise KeyError
     query = """SELECT trx.[location_no]
         ,trx.[location_id]
@@ -65,7 +73,7 @@ if __name__ == "__main__":
     where [date_trxservice] >='2023-04-01'
     group by trx.[location_id],trx.[location_no],[location_name],currency_code,[location_desc]
     having sum([trans_amount]) > 0.01"""
-    df = pd.read_sql(query, cnxn)
+    df = pd.read_sql(query, con = engine)
     # df.to_csv('integra_ds.csv', index = False)
     logging.info(f"time after reading info from sql :{datetime.datetime.now()}")
     logging.info(df.shape)
